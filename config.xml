@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>PrimoNewUI Chromium</Name>
+  <Author>Bill Jones, Tamara Marnell</Author>
+  <Version>1.3.0</Version>
+  <Active>True</Active>
+  <Type>Addon</Type>
+  <Description>Performs an Title, ISBN, and ISSN Search in the Primo New UI interface.</Description>
+  <Forms>
+    <Form>FormRequest</Form>
+  </Forms>
+  <Settings>
+    <Setting name="AutoSave" value="true" type="boolean">
+      <Description>Defines whether you would like the Addon to automatically save the Transaction after importing the Call Number and Location (value is true or false).</Description>
+    </Setting>
+    <Setting name="GoToLandingPage" value="" type="boolean">
+      <Description>Defines whether you would like the Addon to go directly to the PrimoURL start page set in your config.</Description>
+    </Setting>
+    <Setting name="AutoSearchISxN" value="" type="boolean">
+      <Description>Defines whether the ISxN search should be automatically performed when the form opens.</Description>
+    </Setting>
+    <Setting name="AutoSearchTitle" value="" type="boolean">
+      <Description>Defines whether the Title search should be automatically performed when the form opens.</Description>
+    </Setting>
+	<Setting name="PrimoVE" value="true" type="boolean">
+		<Description>Defines whether this Primo installation is on VE.</Description>
+	</Setting>
+    <Setting name="BaseURL" value="https://suny-gen.primo.exlibrisgroup.com/discovery/search" type="string">
+      <Description>Defines the base of your Primo URL. See the ReadMe for an example.</Description>
+    </Setting>
+    <Setting name="DatabaseName" value="01SUNY_GEN:01SUNY_GEN" type="string">
+      <Description>Defines the Database Name of your Primo URL. See the ReadMe for an example.</Description>
+    </Setting>
+    <Setting name="SearchTab" value="ALL_PHYSICAL" type="string">
+      <Description>Defines the tab to search. See the ReadMe for an example.</Description>
+    </Setting>
+    <Setting name="SearchScope" value="ALL_PHYSICAL" type="string">
+      <Description>Defines the scope to search. See the ReadMe for an example.</Description>
+    </Setting>
+  </Settings>
+  <Files>
+    <File>PrimoChrome.lua</File>
+  </Files>
+</Configuration>
