@@ -1,11 +1,16 @@
--- About PrimoNewUI_Chrome.lua
--- PrimoNewUI_Chromium.lua does an PrimoNewUI_Chromium_Search for the ISBN or Title for loans.
--- scriptActive must be set to true for the script to run.
+-- About PrimoNewUI_Chromium.lua
 --
--- 2.1 UPDATE by Andrew Morgan, emeraldflarexii@hotmail.com/Pages/Login
--- Converted to use the Chromium browser.
--- Cleaned up some settings and added a setting to choose which field to import the price.
-
+-- Author: Bill Jones III, SUNY Geneseo, IDS Project, jonesw@geneseo.edu
+-- PrimoNewUI_Chromium.lua provides a basic search for ISBN, ISSN, Title, and Phrase Searching for the Primo New UI interface.
+-- There is a config file that is associated with this Addon that needs to be set up in order for the Addon to work.
+-- Please see the ReadMe.txt file for example configuration values that you can pull from your Primo New UI URL.
+--
+-- IMPORTANT:  One of the following settings must be set to true in order for the Addon to work:
+-- set GoToLandingPage to true for this script to automatically navigate to your instance of Primo New UI.
+-- set AutoSearchISxN to true if you would like the Addon to automatically search for the ISxN.
+-- set AutoSearchTitle to true if you would like the Addon to automatically search for the Title.
+--
+-- Modified 2020-02-11 by Tamara Marnell, Central Oregon Community College, libsys@cocc.edu
 
 local settings = {};
 settings.GoToLandingPage = GetSetting("GoToLandingPage");
@@ -90,7 +95,6 @@ end
 function SearchPhrase()
   if GetFieldValue("Transaction", "RequestType") == "Loan" then  
     cbrowser:Navigate(settings.BaseURL .. "?query=any,contains,%22" .. GetFieldValue("Transaction", "LoanTitle")  .. "%22&"  .. params);
-	interfaceMngr:ShowMessage(settings.BaseURL .. "?query=any,contains,%22" .. GetFieldValue("Transaction", "LoanTitle")  .. "%22&"  .. params, "Insufficient Information");
   elseif GetFieldValue("Transaction", "RequestType") == "Article" then  
     cbrowser:Navigate(settings.BaseURL .. "?query=any,contains,%22" .. GetFieldValue("Transaction", "PhotoJournalTitle")  .. "%22&"  .. params);
   else
@@ -112,39 +116,63 @@ end
 
 
 
--- This function opens the Alma mashup iframe source
-function OpenMashupSource()
-  local document = cbrowser.WebBrowser.Document;
-  -- If selectIssueForm exists, this is the mashup window. Prompt user to click the input button instead.
-  if document:getElementById('selectIssueForm') ~= nil then
-    interfaceMngr:ShowMessage("Select a holding and click the Input Location/Call Number button.", "Holdings open");
-    return false;
-  else
-	-- If mashup component doesn't exist, prompt user to open a full record.
-	local mashups = document:GetElementsByTagName("prm-alma-mashup");
-	if (mashups.count == 0) then
-      interfaceMngr:ShowMessage("Open a full record.", "Record not selected");
-      return false;
-    else
-      -- Loop through the iframes in the mashup component. If one is the AlmagetitMashupIframe, navigate to the source.
-	  local mashup = mashups:get_Item(0);
-      local iframes = mashup:getElementsByTagName("iframe");
-      local iframe = nil;
-      for i=0,iframes.count-1 do
-        iframe = iframes:get_Item(i);
-        if iframe.Name == "AlmagetitMashupIframe" then
-          cbrowser:Navigate(iframe:GetAttribute("src"));
-          break
-        end
-      end
-    end
-  end
-end
 
 -- This function populates the call number and location in the detail form with the values from the Alma mashup window for customers not on Primo VE
 function InputLocation()
-  local document = cbrowser.WebBrowser.Document;
-  -- If selectIssueForm does not exist, this is the search results page. Prompt user to open holdings in the mashup window first.
+
+	local tags2 = cbrowser:EvaluateScript("document.getElementsByTagName('form')[0].innerHTML").Result;
+	interfaceMngr:ShowMessage("[[" .. tags2 .. "]]", "form results");
+
+					local tags2 = cbrowser:EvaluateScript("document.getElementsByClassName('best-location-library-code locations-link')[0].innerText").Result;
+	interfaceMngr:ShowMessage("[[" .. tags2 .. "]]", "Location");
+	
+	
+						local tags2 = cbrowser:EvaluateScript("document.getElementsByClassName('best-location-sub-location locations-link')[0].innerText").Result;
+	interfaceMngr:ShowMessage("[[" .. tags2 .. "]]", "Sub Location");
+	
+						local tags2 = cbrowser:EvaluateScript("document.getElementsByClassName('best-location-delivery locations-link')[0].innerText").Result;
+	interfaceMngr:ShowMessage("[[" .. tags2 .. "]]", "Call Number");
+
+	local doctext2 = cbrowser:EvaluateScript("encodeURI(document.getElementsByTagName('prm-search-result-availability-line')[0].innerHTML)").Result; 
+interfaceMngr:ShowMessage("[[" .. doctext2 .. "]]", "holdingInfo results");
+local library_name = doctext2:match('locations-link">(.-)<');
+interfaceMngr:ShowMessage("[[" .. library_name .. "]]", "LibraryName results");
+
+	local tags2 = cbrowser:EvaluateScript("document.getElementsByTagName('html')[1].innerHTML").Result;
+		interfaceMngr:ShowMessage("[[" .. tags2 .. "]]", "holdingInfo results");
+		
+		local tags2 = cbrowser:EvaluateScript("document.getElementsByTagName('iframe')[0].innerHTML").Result;
+	interfaceMngr:ShowMessage("[[" .. tags2 .. "]]", "iframe results");
+	
+			local tags2 = cbrowser:EvaluateScript("document.getElementsByTagName('tbody')[0].textContent").Result;
+	interfaceMngr:ShowMessage("[[" .. tags2 .. "]]", "tbody text content");
+	
+local tags2 = cbrowser:EvaluateScript(10000, "document.getElementsByClassName('nextLine holdingCallNumber')[0].innerHTML").Result;
+	interfaceMngr:ShowMessage("[[" .. tags2 .. "]]", "innerHTML");
+	
+				local tags2 = cbrowser:EvaluateScript("document.getElementsByClassName('itemLocationName')[0]").Result;
+	interfaceMngr:ShowMessage("[[" .. tags2 .. "]]", "itemLocationName");
+	
+	
+
+	
+	local library_name = tags2:match('itemLibraryName">(.-)</span>'):gsub('itemLibraryName">', '');
+	interfaceMngr:ShowMessage("[[" .. library_name .. "]]", "Items not found");
+	
+	
+local check_for_item = nil;
+  -- If selectIssueForm does not exist, this is the search results page. Prompt user to open holdings in the mashup window first.  
+  	local check_for_item = cbrowser:EvaluateScript("document.getElementsByClassName('itemLibraryName')[0].textContent").Result;
+	interfaceMngr:ShowMessage("[[" .. check_for_item .. "]]", "test");
+	if (check_for_item == nil) then
+		interfaceMngr:ShowMessage("Open a full record and click the Open Holdings button.", "Open holdings first");
+		return false;
+	end
+	
+end
+function Infpuntsd()
+	
+  
   if document:getElementById("selectIssueForm") == nil then
     interfaceMngr:ShowMessage("Open a full record and click the Open Holdings button.", "Open holdings first");
     return false;
@@ -187,184 +215,31 @@ end
 
 -- This function populates the call number and location in the detail form for Ex Libris customers on Primo VE
 function InputLocationVE()
-  -- local document = PrimoNewUIForm.Browser.WebBrowser.Document;
-   cbrowser:ExecuteScript("alert('Starting')");
-  -- local document = cbrowser:ExecuteScript("document.getElementsByTagName('html')[0].innerHTML");
-  -- cbrowser:ExecuteScript("alert(" .. document .. ")");
-   --local document2 = cbrowser:ExecuteScript("document.getElementsByTagName('html')[0].innerHTML");
-   --cbrowser:ExecuteScript("alert(" .. document2 .. ")");
-  --local doctext = cbrowser:EvaluateScript("document.documentElement.outerHTML").Result; 
-  
- -- cbrowser:ExecuteScript("alert('" .. doctext .. "')");
- -- LogDebug(doctext);
-   
---   cbrowser:ExecuteScript("alert('Did 1')");
-   
-   local doctext2 = cbrowser:EvaluateScript(10000, "document.getElementsByTagName('html')[0].innerHTML").Result; 
- --  local response = cbrowser:EvaluateScript(10000, "document.getElementsByTagName('html')[0].innerHTML");
-   local response = cbrowser:EvaluateScript(10000, "document.getElementsByTagName('prm-location-items')[0].innerHTML");   
-   if (response.Success) then 
-    --Do something with the value returned
-		if (response.Result ~= "") then      
-		--	atlasAddonAsync.executeAddonFunction('getCallNumber', Result);
-		else
-			browser:ExecuteScript("alert('Username not set to Addon!')");
-		end
-	else
-		LogDebug(response.Message);
+
+	local tags = cbrowser:EvaluateScript("document.getElementsByTagName('prm-location-items')[0].innerHTML").Result;
+	if (tags == nil) then
+		interfaceMngr:ShowMessage("Open a full record with local items available.", "Record with physical holdings required");
 	end
-   
- local tags3 = cbrowser:EvaluateScript("var amounts = Array.prototype.slice.call(document.querySelectorAll('span.amount')).map(function(a){ return a.innerHTML; }");
- 
-   
-     --LogDebug(doctext2);
-	  interfaceMngr:ShowMessage("[[" .. doctext2 .. "]]", "Items not found");
-     cbrowser:ExecuteScript("alert('Did 2')"); 
---	 LogDebug("[[" .. doctext2 .. "]]");
-  -- If the OPAC component does not exist, prompt user to open a full record with local availability
- -- opacs = cbrowser:ExecuteScript("document.getElementsByTagName('prm-opac')");
- 
- 
- -- This one below pulled through the prm-locations
- local tags = cbrowser:EvaluateScript(10000, "document.getElementsByTagName('prm-location-items')[0].innerHTML").Result;
   
--- This gets Schrader Hall!
-  local location_name = tags:match('collectionTranslation">(.-)<'):gsub('collectionTranslation">', '');
-  
-  interfaceMngr:ShowMessage("[[" .. location_name .. "]]", "Items not found"); 
-  --local tags = cbrowser:ExecuteScript("document.getElementsByTagName('prm-location-items')[0].innerHTML");
-  -- LogDebug("[[" .. tags .. "]]");
-  -- interfaceMngr:ShowMessage("[[" .. tags .. "]]", "Items not found");
-   --local response = cbrowser:EvaluateScript("tags.match(/<span ng-if='$ctrl.currLoc.location.callNumber' dir='auto'>(.*?)<\/span>/g)");
+	local location_name = tags:match('collectionTranslation">(.-)<'):gsub('collectionTranslation">', '');
+	interfaceMngr:ShowMessage("[[" .. location_name .. "]]", "Items not found"); 
 
 	local call_number = tags:match('callNumber" dir="auto">(.-)<'):gsub('callNumber" dir="auto">', '');
-	 interfaceMngr:ShowMessage("[[" .. call_number .. "]]", "Items not found");
-  -- local selected = tags:match('<span ng-if="$ctrl.currLoc.location.callNumber" dir="auto">.</span>'):gsub('<span ng-if="$ctrl.currLoc.location.callNumber" dir="auto">', ''):gsub('</span>', '');
---local selected = string.match(tags, '<span ng-if="$ctrl.currLoc.location.callNumber" dir="auto"> (.-) </span>');
---interfaceMngr:ShowMessage("[[" .. selected .. "]]", "Items not found");
+	interfaceMngr:ShowMessage("[[" .. call_number .. "]]", "Items not found");
 
-      if (location_name == nil or call_number == nil) then
-        interfaceMngr:ShowMessage("Location or call number not found on this page.", "Information not found");
-        return false;
-      else
-        SetFieldValue("Transaction", "Location", location_name);
-        SetFieldValue("Transaction", "CallNumber", call_number);
-      end
+		if (location_name == nil or call_number == nil) then
+			interfaceMngr:ShowMessage("Location or call number not found on this page.", "Information not found");
+			return false;
+		else
+			SetFieldValue("Transaction", "Location", location_name);
+			SetFieldValue("Transaction", "CallNumber", call_number);
+		end
 	  
-	  if (settings.AutoSave == true) then
-	  	ExecuteCommand("Save", "Transaction");
-	end
-	    ExecuteCommand("SwitchTab", {"Detail"});
-end
-   
-function getCallNumber(Result)
-local lis = Result;
-
-	  -- Loop through all spans and get info based on ng-if and ng-bind-html attributes (no classes or useful IDs in VE)
-      local location_items = lis:get_Item(0);
-      local spans = location_items:getElementsByTagName("span");
-      local span = nil;
-      local span_if = nil;
-      local span_bind = nil;
-      local location_name = nil;
-      local call_number = nil;
-      for s=0,spans.count-1 do
-  	    span = spans:get_Item(s);
-        span_bind = span:GetAttribute("ng-bind-html");
-		span_if = span:GetAttribute("ng-if");
-        if span_bind ~= nil then
-          if string.find(span_bind, "collectionTranslation") then
-            location_name = span.innerText;
-          end
-        end
-		if span_if ~= nil then
-          if string.find(span_if, "callNumber") then
-            if span.innerText ~= "" then
-              call_number = span.innerText;
-            end
-          end
-        end
-      end
-      if (location_name == nil or call_number == nil) then
-        interfaceMngr:ShowMessage("Location or call number not found on this page.", "Information not found");
-        return false;
-      else
-        SetFieldValue("Transaction", "Location", location_name);
-        SetFieldValue("Transaction", "CallNumber", call_number);
-      end
-  
-
-  -- Switch back to Details form.
-  ExecuteCommand("SwitchTab", {"Detail"});
+		if (settings.AutoSave == true) then
+			ExecuteCommand("Save", "Transaction");
+		end
+	ExecuteCommand("SwitchTab", {"Detail"});
 end
 
 
 
-
-
-
--- This function populates the call number and location in the detail form for Ex Libris customers on Primo VE
-function InputLocationVE2()
-interfaceMngr:ShowMessage("You Clicked the button.", "Open holdings first");
- -- local document = cbrowser.Document;
-  --interfaceMngr:ShowMessage(document, "Open holdings first");
-  -- If the OPAC component does not exist, prompt user to open a full record with local availability
-  --local opacs = document:GetElementsByTagName("prm-opac");
-  cbrowser:ExecuteScript("alert('Show a javascript popup alert message')");
- end
- function InputLocationVE2()
- local document = cbrowser:ExecuteScript("document.getElementsByTagName('html')[0].innerHTML");
- LogDebug("The document value is: " .. document);
-interfaceMngr:ShowMessage(document, "Open holdings first1"); 
---local opacs3 = document:GetElementsByTagName("prm-opac");
-  --local opacs =	cbrowser:ExecuteScript("document.GetElementsByTagName('prm-opac')");
-  local opacs = document:GetElementsByTagName("prm-opac");
-interfaceMngr:ShowMessage(opacs, "Open holdings first2");  
-  if opacs.count == 0 then
-    interfaceMngr:ShowMessage("Open a full record with local items available.", "Record with physical holdings required");
-  return false;
-  else
-    -- Get items within the OPAC component (not other members)
-    local opac = opacs:get_Item(0);
-    local lis = opac:getElementsByTagName("prm-location-items");
-    if lis.count == 0 then
-      interfaceMngr:ShowMessage("No local items found in this record.", "Items not found");
-      return false;
-    else
-	  -- Loop through all spans and get info based on ng-if and ng-bind-html attributes (no classes or useful IDs in VE)
-      local location_items = lis:get_Item(0);
-      local spans = location_items:getElementsByTagName("span");
-      local span = nil;
-      local span_if = nil;
-      local span_bind = nil;
-      local location_name = nil;
-      local call_number = nil;
-      for s=0,spans.count-1 do
-  	    span = spans:get_Item(s);
-        span_bind = span:GetAttribute("ng-bind-html");
-		span_if = span:GetAttribute("ng-if");
-        if span_bind ~= nil then
-          if string.find(span_bind, "collectionTranslation") then
-            location_name = span.innerText;
-          end
-        end
-		if span_if ~= nil then
-          if string.find(span_if, "callNumber") then
-            if span.innerText ~= "" then
-              call_number = span.innerText;
-            end
-          end
-        end
-      end
-      if (location_name == nil or call_number == nil) then
-        interfaceMngr:ShowMessage("Location or call number not found on this page.", "Information not found");
-        return false;
-      else
-        SetFieldValue("Transaction", "Location", location_name);
-        SetFieldValue("Transaction", "CallNumber", call_number);
-      end
-    end
-  end
-  -- Switch back to Details form.
-  ExecuteCommand("SwitchTab", {"Detail"});
-end
