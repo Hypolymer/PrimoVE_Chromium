@@ -109,17 +109,23 @@ function SearchTitle()
 	end
 end
 
-
-
 function OpenMashupSource()
-	local iframe_src = cbrowser:EvaluateScript("document.getElementsByTagName('iframe')[0].getAttribute('src');").Result;
+	--local iframe_src = cbrowser:EvaluateScript("document.getElementsByTagName('iframe')[0].getAttribute('src');").Result;
+	iframe_src = cbrowser:EvaluateScript("document.getElementsByName('AlmagetitMashupIframe')[0].getAttribute('src');").Result;
 	--interfaceMngr:ShowMessage("[[" .. iframe_src .. "]]", "Location");
 	--interfaceMngr:ShowMessage(string.sub(iframe_src, 1, 5), "URL cutter");
-	local https_checker = string.sub(iframe_src, 1, 5);
-	if (iframe_src == nil or https_checker ~= 'https') then
-		interfaceMngr:ShowMessage("Open a full record with local items available.", "Record with physical holdings required");
+	
+	--the line below checks to see if the URL contains https.  If it does not, then the iFrame link is from the search results.  If it does contain https, it is from the record item view.
+	--Note: sometimes the page needs to be refreshed on the open record before it captures the https
+	if iframe_src == nil then
+		interfaceMngr:ShowMessage("Open a full record with local items available.  If the full record is open, please click Refresh in the top ribbon.", "Record with physical holdings required");	
 	else
-	cbrowser:Navigate(iframe_src);	
+		local https_checker = string.sub(iframe_src, 1, 5);
+		if (iframe_src == nil or https_checker ~= 'https') then
+			interfaceMngr:ShowMessage("Open a full record with local items available.  If the full record is open, please click Refresh in the top ribbon.", "Record with physical holdings required");
+		else
+		cbrowser:Navigate(iframe_src);
+		end
 	end
 end
 
@@ -157,39 +163,6 @@ local iframe_checker = cbrowser:EvaluateScript("document.getElementsByTagName('f
 		end
 		ExecuteCommand("SwitchTab", {"Detail"});	
 	end
-end
-
--- This function populates the call number and location in the detail form with the values from the "best-location" location listed at the top of the item record
-function InputLocations()
-
-	local library_text = cbrowser:EvaluateScript("document.getElementsByClassName('best-location-library-code locations-link')[1].innerText").Result;
-	--interfaceMngr:ShowMessage("[[" .. library_text .. "]]", "Location");
-
-	local library_text = cbrowser:EvaluateScript("document.getElementsByClassName('availability-status available_in_institution')[1].innerText").Result;
-	interfaceMngr:ShowMessage("[[" .. library_text .. "]]", "Location");
-	
-	local library_text = cbrowser:EvaluateScript("document.getElementsByClassName('libraryName itemLibraryName')[0].innerText").Result;
-	interfaceMngr:ShowMessage("[[" .. library_text .. "]]", "Location iFrame");
-		
-	local library_sub_text1 = cbrowser:EvaluateScript("document.getElementsByClassName('best-location-sub-location locations-link')[0].innerText").Result;
-	local library_sub_text2 = cbrowser:EvaluateScript("document.getElementsByClassName('best-location-sub-location locations-link')[1].innerText").Result;
-	local library_sub_text = library_sub_text1 .. " " .. library_sub_text2;
-	--interfaceMngr:ShowMessage("[[" .. library_sub_text .. "]]", "Sub Location");
-	
-	--local the_call_number = cbrowser:EvaluateScript("document.getElementsByClassName('best-location-delivery locations-link')[0].innerText").Result;
-	local the_call_number = cbrowser:EvaluateScript("document.getElementsByClassName('best-location-delivery locations-link')[1].innerText").Result;
-	local call_number_text = string.sub(the_call_number, 2, -2);
-	--interfaceMngr:ShowMessage("[[" .. call_number_text .. "]]", "Splitter Call Number");
-	
-	if (library_text == nil) then
-		interfaceMngr:ShowMessage("Location or call number not found on this page.  Be sure to open an item record to import location and call number.", "Information not found");
-		return false;
-	else
-		SetFieldValue("Transaction", "Location", library_text .. " " .. library_sub_text);
-		SetFieldValue("Transaction", "CallNumber", call_number_text);
-	end
-	call_number_text = nil;
-	ExecuteCommand("SwitchTab", {"Detail"});	
 end
 
 -- This function populates the call number and location in the detail form for Ex Libris customers on Primo VE
