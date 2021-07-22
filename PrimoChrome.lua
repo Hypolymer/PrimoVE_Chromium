@@ -114,14 +114,53 @@ end
 function OpenMashupSource()
 	local iframe_src = cbrowser:EvaluateScript("document.getElementsByTagName('iframe')[0].getAttribute('src');").Result;
 	--interfaceMngr:ShowMessage("[[" .. iframe_src .. "]]", "Location");
-	if (iframe_src == nil) then
+	--interfaceMngr:ShowMessage(string.sub(iframe_src, 1, 5), "URL cutter");
+	local https_checker = string.sub(iframe_src, 1, 5);
+	if (iframe_src == nil or https_checker ~= 'https') then
 		interfaceMngr:ShowMessage("Open a full record with local items available.", "Record with physical holdings required");
-	end
+	else
 	cbrowser:Navigate(iframe_src);	
+	end
+end
+
+function InputLocation()
+
+local iframe_checker = cbrowser:EvaluateScript("document.getElementsByTagName('form')[0].getAttribute('id');").Result;
+	--interfaceMngr:ShowMessage("[[" .. iframe_checker .. "]]", "Location");
+	if (iframe_checker ~= 'selectIssueForm') then
+		interfaceMngr:ShowMessage("Open a full record with local items available.", "Record with physical holdings required");
+		return false;
+	else
+
+		local single_location_checker = cbrowser:EvaluateScript("document.getElementsByTagName('li')[2].getAttribute('id');").Result;
+		--interfaceMngr:ShowMessage(single_location_checker, "Multiple holdings found");
+		if (single_location_checker ~= 'locationLabel') then
+			interfaceMngr:ShowMessage("Select a holding to import.", "Multiple holdings found");
+			return false;
+		else	
+			local library_text = cbrowser:EvaluateScript("document.getElementsByClassName('libraryName itemLibraryName')[0].innerText").Result;
+			--interfaceMngr:ShowMessage("[[" .. library_text .. "]]", "Library Name");
+	
+			local library_sub_text = cbrowser:EvaluateScript("document.getElementsByClassName('itemLocationName')[0].innerText").Result;
+			--interfaceMngr:ShowMessage("[[" .. library_sub_text .. "]]", "Library Sub Location");
+	
+			local call_number_text = cbrowser:EvaluateScript("document.getElementsByClassName('itemAccessionNumber')[0].innerText").Result;
+			--interfaceMngr:ShowMessage("[[" .. call_number_text .. "]]", "Call Number");
+	
+			if (library_text == nil or call_number_text == nil) then
+				interfaceMngr:ShowMessage("Location or call number not found on this page.  Be sure to open an item record to import location and call number.", "Information not found");
+				return false;
+			else
+				SetFieldValue("Transaction", "Location", library_text .. " " .. library_sub_text);
+				SetFieldValue("Transaction", "CallNumber", call_number_text);
+			end
+		end
+		ExecuteCommand("SwitchTab", {"Detail"});	
+	end
 end
 
 -- This function populates the call number and location in the detail form with the values from the "best-location" location listed at the top of the item record
-function InputLocation()
+function InputLocations()
 
 	local library_text = cbrowser:EvaluateScript("document.getElementsByClassName('best-location-library-code locations-link')[1].innerText").Result;
 	--interfaceMngr:ShowMessage("[[" .. library_text .. "]]", "Location");
