@@ -19,19 +19,19 @@
     <Setting name="AutoSearchTitle" value="true" type="boolean">
       <Description>Defines whether the Title search should be automatically performed when the form opens.</Description>
     </Setting>
-	<Setting name="PrimoVE" value="false" type="boolean">
+	<Setting name="PrimoVE" value="" type="boolean">
 		<Description>Defines whether this Primo installation is on VE.</Description>
 	</Setting>
-    <Setting name="BaseURL" value="https://cdu-edu-primo.hosted.exlibrisgroup.com/primo-explore/search" type="string">
+    <Setting name="BaseURL" value="" type="string">
       <Description>Defines the base of your Primo URL. See the ReadMe for an example.</Description>
     </Setting>
-    <Setting name="DatabaseName" value="61CDU" type="string">
+    <Setting name="DatabaseName" value="" type="string">
       <Description>Defines the Database Name of your Primo URL. See the ReadMe for an example.</Description>
     </Setting>
-    <Setting name="SearchTab" value="default_scope" type="string">
+    <Setting name="SearchTab" value="" type="string">
       <Description>Defines the tab to search. See the ReadMe for an example.</Description>
     </Setting>
-    <Setting name="SearchScope" value="default_scope" type="string">
+    <Setting name="SearchScope" value="" type="string">
       <Description>Defines the scope to search. See the ReadMe for an example.</Description>
     </Setting>
   </Settings>
