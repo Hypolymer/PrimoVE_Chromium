@@ -1,7 +1,7 @@
 -- About PrimoNewUI_Chromium.lua
 --
 -- Author: Bill Jones III, SUNY Geneseo, jonesw@geneseo.edu
--- Based on methods developed by Tamara Marnell, Central Oregon Community College, libsys@cocc.edu (2020-02-11)
+-- This Addon was created using iFrame capture methods developed for the original ILLiad Primo New UI Addon by Tamara Marnell, Orbis Cascade Alliance, tmarnell@orbiscascade.org
 -- PrimoNewUI_Chromium.lua provides a basic search for ISBN, ISSN, Title, and Phrase Searching for the Primo New UI interface.
 -- There is a config file that is associated with this Addon that needs to be set up in order for the Addon to work.
 -- Please see the ReadMe.txt file for example configuration values that you can pull from your Primo New UI URL.
@@ -21,7 +21,6 @@ settings.BaseURL = GetSetting("BaseURL");
 settings.DatabaseName = GetSetting("DatabaseName");
 settings.SearchTab = GetSetting("SearchTab");
 settings.SearchScope = GetSetting("SearchScope");
-settings.AutoSave = GetSetting("AutoSave");
 
 local params = "tab=" .. settings.SearchTab .. "&search_scope=" .. settings.SearchScope .. "&vid=" .. settings.DatabaseName .. "&sortby=rank&offset=0";
 
@@ -36,7 +35,7 @@ PrimoNewUI_ChromiumSearchForm.RibbonPage = nil;
 function Init()
 	interfaceMngr = GetInterfaceManager();
 	--Create Form
-	PrimoNewUI_ChromiumSearchForm.Form = interfaceMngr:CreateForm("PrimoNewUI_Chromium", "Script");
+	PrimoNewUI_ChromiumSearchForm.Form = interfaceMngr:CreateForm("PrimoNewUI Chromium", "Script");
 	-- Create Chromium browser
 	cbrowser = PrimoNewUI_ChromiumSearchForm.Form:CreateBrowser("PrimoNewUI_Chromium_Search", "PrimoNewUI_Chromium_Search_Browser", "PrimoNewUI_Chromium_Search", "Chromium");
 	--cbrowser:ShowDevTools();
@@ -45,7 +44,6 @@ function Init()
 
 	-- Since we didn't create a ribbon explicitly before creating our browser, it will have created one using the name we passed the CreateBrowser method.  We can retrieve that one and add our buttons to it.
 	PrimoNewUI_ChromiumSearchForm.RibbonPage = PrimoNewUI_ChromiumSearchForm.Form:GetRibbonPage("PrimoNewUI_Chromium_Search");
-	-- Imports price from first Item in list.  
 	   
 	-- Here we are adding a new button to the ribbon
 	PrimoNewUI_ChromiumSearchForm.RibbonPage:CreateButton("Search ISxN", GetClientImage("Search32"), "SearchISxN", "Scope: " .. settings.SearchScope);
@@ -115,8 +113,8 @@ function OpenMashupSource()
 	--interfaceMngr:ShowMessage("[[" .. iframe_src .. "]]", "Location");
 	--interfaceMngr:ShowMessage(string.sub(iframe_src, 1, 5), "URL cutter");
 	
-	--the line below checks to see if the URL contains https.  If it does not, then the iFrame link is from the search results.  If it does contain https, it is from the record item view.
-	--Note: sometimes the page needs to be refreshed on the open record before it captures the https
+	--the line below checks to see if the URL contains https.  If it does not, then the iFrame link is from the search results (and not the one you want).  If it does contain https, it is from the record item view.
+	--Note: sometimes the page needs to be refreshed on the open record before it captures the https link
 	if iframe_src == nil then
 		interfaceMngr:ShowMessage("Open a full record with local items available.  If the full record is open, please click Refresh in the top ribbon.", "Record with physical holdings required");	
 	else
