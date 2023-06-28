@@ -1,41 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Name>PrimoNewUI Chromium</Name>
+  <Name>Primo VE Chromium</Name>
   <Author>Bill Jones, Tamara Marnell</Author>
-  <Version>2.0.1</Version>
+  <Version>2.1.3</Version>
   <Active>True</Active>
   <Type>Addon</Type>
-  <Description>Performs an Title, ISBN, and ISSN Search in the Primo New UI interface.</Description>
+  <Description>Performs an Title, ISBN, ISSN, and OCLC Number Search in the Primo VE interface.</Description>
   <Forms>
     <Form>FormRequest</Form>
   </Forms>
   <Settings>
     <Setting name="GoToLandingPage" value="" type="boolean">
-      <Description>Defines whether you would like the Addon to go directly to the PrimoURL start page set in your config.</Description>
+      <Description>Defines whether you would like the Addon to go directly to the PrimoURL start page set in your config (true or false).</Description>
     </Setting>
     <Setting name="AutoSearchISxN" value="" type="boolean">
-      <Description>Defines whether the ISxN search should be automatically performed when the form opens.</Description>
+      <Description>Defines whether the ISxN search should be automatically performed when the form opens (true or false).</Description>
     </Setting>
     <Setting name="AutoSearchTitle" value="true" type="boolean">
-      <Description>Defines whether the Title search should be automatically performed when the form opens.</Description>
+      <Description>Defines whether the Title search should be automatically performed when the form opens (true or false).</Description>
     </Setting>
-	<Setting name="PrimoVE" value="" type="boolean">
-		<Description>Defines whether this Primo installation is on VE.</Description>
-	</Setting>
-    <Setting name="BaseURL" value="" type="string">
+    <Setting name="BaseURL" value="https://suny-gen.primo.exlibrisgroup.com/discovery/search" type="string">
       <Description>Defines the base of your Primo URL. See the ReadMe for an example.</Description>
     </Setting>
-    <Setting name="DatabaseName" value="" type="string">
+    <Setting name="DatabaseName" value="01SUNY_GEN:01SUNY_GEN" type="string">
       <Description>Defines the Database Name of your Primo URL. See the ReadMe for an example.</Description>
     </Setting>
-    <Setting name="SearchTab" value="" type="string">
+    <Setting name="SearchTab" value="ALL_PHYSICAL" type="string">
       <Description>Defines the tab to search. See the ReadMe for an example.</Description>
     </Setting>
-    <Setting name="SearchScope" value="" type="string">
+    <Setting name="SearchScope" value="ALL_PHYSICAL" type="string">
       <Description>Defines the scope to search. See the ReadMe for an example.</Description>
     </Setting>
+    <Setting name="BarcodeLocation" value="ItemInfo4" type="string">
+      <Description>Defines which field to use in ILLiad to inserting the Barcode (example: ItemInfo5). This setting must contain a value in order to gather the Barcode.</Description>
+    </Setting>	
+    <Setting name="MaterialTypePhrase" value="Material Type" type="string">
+      <Description>IMPORTANT! This value must be filled in for the Addon to work.  Please enter the label used in the 'Item in Place' box for Format, Format Type, or Material Type.</Description>
+    </Setting>		
   </Settings>
   <Files>
-    <File>PrimoNewUI_Chromium.lua</File>
+    <File>PrimoVE_Chromium.lua</File>
   </Files>
 </Configuration>
