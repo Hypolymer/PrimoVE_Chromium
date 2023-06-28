@@ -31,12 +31,12 @@
     <Setting name="SearchScope" value="ALL_PHYSICAL" type="string">
       <Description>Defines the scope to search. See the ReadMe for an example.</Description>
     </Setting>
-    <Setting name="BarcodeLocation" value="ItemInfo4" type="string">
-      <Description>Defines which field to use in ILLiad to inserting the Barcode (example: ItemInfo5). This setting must contain a value in order to gather the Barcode.</Description>
-    </Setting>	
     <Setting name="MaterialTypePhrase" value="Material Type" type="string">
       <Description>IMPORTANT! This value must be filled in for the Addon to work.  Please enter the label used in the 'Item in Place' box for Format, Format Type, or Material Type.</Description>
-    </Setting>		
+    </Setting>	
+    <Setting name="BarcodeLocation" value="" type="string">
+      <Description>Defines which field to use in ILLiad to inserting the Barcode (example: ItemInfo5). This setting must contain a value in order to gather the Barcode.</Description>
+    </Setting>			
   </Settings>
   <Files>
     <File>PrimoVE_Chromium.lua</File>
