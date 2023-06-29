@@ -37,6 +37,9 @@ Example:  ALL_PHYSICAL
 Description:  This is phrase used for format/material type in the 'Item in Place' box on the Primo item record.  
 Example:  Material Type
 
+<img width="872" alt="image" src="https://github.com/Hypolymer/PrimoVE_Chromium/assets/1964081/c873913c-8962-4dd3-b648-9262d80e48ce">
+
+
 **BarcodeField:**  
 Description:  Defines which field to use in ILLiad to inserting the Barcode (example: ItemInfo5). This setting must contain a value in order to gather the Barcode.  
 Example:  ItemInfo5
