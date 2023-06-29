@@ -38,7 +38,7 @@ Description:  This is phrase used for format/material type in the 'Item in Place
 Example:  Material Type
 
 **BarcodeField:**  
-Description:  Defines which field to use in ILLiad to inserting the Barcode (example: ItemInfo5). This setting must contain a value in order to gather the Barcode.
+Description:  Defines which field to use in ILLiad to inserting the Barcode (example: ItemInfo5). This setting must contain a value in order to gather the Barcode.  
 Example:  ItemInfo5
 
 
