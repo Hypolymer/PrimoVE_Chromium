@@ -21,6 +21,7 @@ settings.DatabaseName = GetSetting("DatabaseName");
 settings.SearchTab = GetSetting("SearchTab");
 settings.SearchScope = GetSetting("SearchScope");
 settings.MaterialTypePhrase = GetSetting("MaterialTypePhrase");
+settings.Include_Main_Location_Name = GetSetting("Include_Main_Location_Name");
 
 local params = "tab=" .. settings.SearchTab .. "&search_scope=" .. settings.SearchScope .. "&vid=" .. settings.DatabaseName .. "&sortby=rank&offset=0";
 
@@ -124,10 +125,10 @@ function InputLocationVE()
 	if (tags:match(settings.MaterialTypePhrase .. ': (.-)<') ~= nil) then
   
 		local location_name = tags:match('ctrl.currLoc.location(.-)<'):gsub('(.-)>', '');
-		--interfaceMngr:ShowMessage("[[" .. location_name .. "]]", "Items not found"); 
+		--interfaceMngr:ShowMessage("[[" .. location_name .. "]]", "Items found"); 
 	
 		local sublocation_name = tags:match('ctrl.getSubLibraryName(.-)<'):gsub('(.-)>', '');
-		--interfaceMngr:ShowMessage("[[" .. sublocation_name .. "]]", "Items not found"); 	
+		--interfaceMngr:ShowMessage("[[" .. sublocation_name .. "]]", "Items found"); 	
 	
 		local call_number = tags:match('ctrl.currLoc.location.callNumber" dir="auto">(.-)<'):gsub('(.-)>', '');
 		--interfaceMngr:ShowMessage("[[" .. call_number .. "]]", "Items not found");
@@ -136,7 +137,11 @@ function InputLocationVE()
 			interfaceMngr:ShowMessage("Location or call number not found on this page.", "Information not found");
 			return false;
 		else
+		    if(settings.Include_Main_Location_Name) then
 			SetFieldValue("Transaction", "Location", location_name .. " " .. sublocation_name);
+			else 
+			SetFieldValue("Transaction", "Location", sublocation_name);
+			end
 			SetFieldValue("Transaction", "CallNumber", call_number);
 		end
 		-- decide if settings.BarcodeLocation is not empty and them copy barcode_text over into ILLiad field	
