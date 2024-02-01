@@ -1,14 +1,18 @@
 -- About PrimoVE_Chromium.lua
 --
 -- Author: Bill Jones III, SUNY Geneseo, jonesw@geneseo.edu and Tamara Marnell, Orbis Cascade Alliance, tmarnell@orbiscascade.org
+-- Last update:  February 1, 2024 (Added WebView2 Fallback)
 -- PrimoVE_Chromium.lua provides a basic search for ISBN, ISSN, Title, Phrase, and OCLC Number Searching for the Primo VE interface.
 -- There is a config file that is associated with this Addon that needs to be set up in order for the Addon to work.
--- Please see the ReadMe.txt file for example configuration values that you can pull from your Primo New UI URL.
+-- Please see the ReadMe.txt file for example configuration values that you can pull from your Primo VE URL.
 --
 -- IMPORTANT:  One of the following settings must be set to true in order for the Addon to work:
 -- set GoToLandingPage to true for this script to automatically navigate to your instance of Primo New UI.
 -- set AutoSearchISxN to true if you would like the Addon to automatically search for the ISxN.
--- set AutoSearchTitle to true if you would like the Addon to automatically search for the Title.k
+-- set AutoSearchTitle to true if you would like the Addon to automatically search for the Title.
+--
+-- IMPORTANT:  You must set the configuration value for MaterialTypePhrase.  This field value is located on the Primo item record, after clicking
+-- on the 'Item in Place' Primo box.  Example values might be "Material Type" or "Description".
 
 local settings = {};
 settings.GoToLandingPage = GetSetting("GoToLandingPage");
