@@ -2,7 +2,7 @@
 <Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Name>Primo VE Chromium</Name>
   <Author>Bill Jones, Tamara Marnell</Author>
-  <Version>2.1.4</Version>
+  <Version>2.1.5</Version>
   <Active>True</Active>
   <Type>Addon</Type>
   <Description>Performs an Title, ISBN, ISSN, and OCLC Number Search in the Primo VE interface.</Description>
